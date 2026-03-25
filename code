@@ -15,9 +15,9 @@
 #include "esp_http_server.h"
 
 
-const char* ssid = "JavaBinHotspot";
+const char* ssid = "***";
 
-const char* password = "javabin26";
+const char* password = "***";
 
 
 #define PART_BOUNDARY "123456789000000000000987654321"
@@ -45,7 +45,7 @@ const char* password = "javabin26";
 
 #define Y4_GPIO_NUM       19
 
-#define Y3_GPIO_NUM       18,0
+#define Y3_GPIO_NUM       18
 
 
 #define Y2_GPIO_NUM        5
@@ -177,7 +177,7 @@ static esp_err_t stream_handler(httpd_req_t *req){
     }
 
 
-    vTaskDelay(1); // Stabilität
+    //vTaskDelay(1); // Stabilität
 
   }
 
@@ -268,7 +268,7 @@ void setup() {
 
   config.pin_reset = RESET_GPIO_NUM;
 
-  config.xclk_freq_hz = 20000000;
+  config.xclk_freq_hz = 16000000;
 
   config.pixel_format = PIXFORMAT_JPEG;
 
@@ -277,9 +277,9 @@ void setup() {
 
     config.frame_size = FRAMESIZE_VGA;   // stabiler
 
-    config.jpeg_quality = 12;
+    config.jpeg_quality = 15;
 
-    config.fb_count = 2;
+    config.fb_count = 1;
 
   } else {
 
@@ -302,6 +302,12 @@ void setup() {
 
   }
 
+  sensor_t * s = esp_camera_sensor_get();
+  if(s->id.PID == OV3660_PID) {
+    s->set_vflip(s,1);
+    s->set_brightness(s,1);
+    s->set_saturation(s,-2);
+  }
 
   WiFi.begin(ssid, password);
 
